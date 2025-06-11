@@ -4,6 +4,12 @@ pipeline {
         PROJECT = 'expense'
         COMPONENT = 'backend'
         appVersion = ''
+    options {
+        disableConcurrentBuilds()
+        timeout(time: 30, unit: 'MINUTES')
+        ansiColor('xterm')
+    }
+    
     }
     stages {
         stage ('INIT') {
@@ -23,6 +29,7 @@ pipeline {
     post {
         always {
            echo " This is a hello-pipeline build "
+
         }
         failure {
             echo " This is a hello-pipeline build is failed for some reason"
