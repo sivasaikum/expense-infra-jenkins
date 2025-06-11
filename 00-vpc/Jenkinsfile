@@ -1,0 +1,34 @@
+pipeline {
+    agent { label 'STAGE-1'}
+    environment {
+        PROJECT = 'expense'
+        COMPONENT = 'backend'
+        appVersion = ''
+    }
+    stages {
+        stage ('INIT') {
+            steps {
+                script {
+                    withAWS ( region: 'us-east-1', credentials: 'aws-cred') {
+                        sh """
+                        cd 00-vpc/
+                        terraform init -reconfigure
+                        """
+                    }
+
+                }
+            }
+        }
+    }
+    post {
+        always {
+           echo " This is a hello-pipeline build "
+        }
+        failure {
+            echo " This is a hello-pipeline build is failed for some reason"
+        }
+        success {
+            echo " This is a hello-pipeline build is Successed . Thanks ! "
+        }
+    }
+}
