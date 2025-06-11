@@ -4,12 +4,11 @@ pipeline {
         PROJECT = 'expense'
         COMPONENT = 'backend'
         appVersion = ''
+    }
     options {
         disableConcurrentBuilds()
         timeout(time: 30, unit: 'MINUTES')
         ansiColor('xterm')
-    }
-    
     }
     stages {
         stage ('INIT') {
