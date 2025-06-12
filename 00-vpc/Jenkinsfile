@@ -10,6 +10,9 @@ pipeline {
         timeout(time: 30, unit: 'MINUTES')
         ansiColor('xterm')
     }
+    parameters {
+        choice(name:'ACTION',choices:['apply','destroy'],description: 'pick something')
+    }
     stages {
         stage ('INIT') {
             steps {
@@ -43,18 +46,28 @@ pipeline {
                 }
             }
         }
+        stage('Trigger-SG') {
+            when {
+                expression {
+                    params.ACTION == 'apply'
+                }
+            }
+            steps {
+                build job: '10-sg', parameters: [string(name:'ACTION', value:'apply')], propagate: true
+
+            }
+        }
     }
     post {
         always {
-           echo " This is a hello-pipeline build "
-           deleteDir()
-
+            echo " This is a joindevops Expense project build"
+            deleteDir()
         }
         failure {
-            echo " This is a hello-pipeline build is failed for some reason"
+            echo " This pipeline is failed for some reason"
         }
         success {
-            echo " This is a hello-pipeline build is Successed . Thanks ! "
+            echo "This pipeline is success"
         }
     }
 }
