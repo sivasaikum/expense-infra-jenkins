@@ -19,27 +19,59 @@ pipeline {
                         sh """
                             cd 70-ingress-alb
                             terraform init -reconfigure
-                            terraform plan
+                            
                         """
                     }
                 }
             }
         }
 
-        stage('APPLY') {
+        stage('APPLY and DESTROY') {
             steps {
                 script {
                     withAWS(region: 'us-east-1', credentials: 'aws-cred') {
-                        sh """
+                        if(params.ACTION == 'apply'){
+                            sh """
+                                cd 70-ingress-alb
+                                terraform plan
+                                terraform apply -auto-approve
+                            """
+                        }else {
+                            sh """
                             cd 70-ingress-alb
-                            terraform apply -auto-approve
-                        """
+                            terraform destroy -auto-approve
+
+                            """
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('destroy infra') {
+            when {
+                expression {
+                    params.ACTION == 'destroy'
+
+                }
+            }
+            steps {
+                script {
+                    withAWS (region: 'us-east-1', credentials: 'aws-cred'){
+                        def list = ["60-acm", "50-ecr", "40-eks", "30-rds", "20-bastion", "10-sg", "00-vpc"]
+                        for (items in list) {
+                            sh """
+                            cd $items
+                            terraform init -reconfigure
+                            terraform destroy -auto-approve
+
+                            """
+                        }
                     }
                 }
             }
         }
     }
-
     post {
         always {
             echo " This is a joindevops Expense project build"
