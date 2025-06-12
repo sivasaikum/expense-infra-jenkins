@@ -36,7 +36,6 @@ module "eks" {
   # EKS Managed Node Group(s)
   eks_managed_node_group_defaults = {
     instance_types = ["m6i.large", "m5.large", "m5n.large", "m5zn.large"]
-    create_before_destroy = true
   }
 
   eks_managed_node_groups = {
@@ -59,26 +58,25 @@ module "eks" {
      }
    }
 
-  }
-  eks_managed_node_groups_green = {
-    green = {
-      # Starting on 1.30, AL2023 is the default AMI type for EKS managed node groups
-      ami_type       = "AL2023_x86_64_STANDARD"
-      instance_types = ["m5.xlarge"]
-      key_name = aws_key_pair.eks.key_name
+  #  green = {
+  #     # Starting on 1.30, AL2023 is the default AMI type for EKS managed node groups
+  #     ami_type       = "AL2023_x86_64_STANDARD"
+  #     instance_types = ["m5.xlarge"]
+  #     key_name = aws_key_pair.eks.key_name
 
-      min_size     = 2
-      max_size     = 10
-      desired_size = 2
-      iam_role_additional_policies = {
-        AmazonEBSCSIDriverPolicy = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
-        AmazonEFSCSIDriverPolicy = "arn:aws:iam::aws:policy/service-role/AmazonEFSCSIDriverPolicy"
-        AmazonEKSLoadBalancingPolicy = "arn:aws:iam::aws:policy/ElasticLoadBalancingFullAccess"
-        AmazonEKSWorkerNodePolicy = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
-        AmazonEKS_CNI_Policy = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
-        AmazonEC2ContainerRegistryReadOnly = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
-     }
-   }
+  #     min_size     = 2
+  #     max_size     = 10
+  #     desired_size = 2
+  #     iam_role_additional_policies = {
+  #       AmazonEBSCSIDriverPolicy = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
+  #       AmazonEFSCSIDriverPolicy = "arn:aws:iam::aws:policy/service-role/AmazonEFSCSIDriverPolicy"
+  #       AmazonEKSLoadBalancingPolicy = "arn:aws:iam::aws:policy/ElasticLoadBalancingFullAccess"
+  #       AmazonEKSWorkerNodePolicy = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
+  #       AmazonEKS_CNI_Policy = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
+  #       AmazonEC2ContainerRegistryReadOnly = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+  #    }
+  #  }
+
   }
 
   tags = merge (
