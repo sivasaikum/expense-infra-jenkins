@@ -1,0 +1,58 @@
+pipeline {
+    agent {label 'STAGE-1'}
+    environment {
+        PROJECT = 'expense'
+        COMPONENT = 'backend'
+        appVersion = ''
+    }
+    options {
+        disableConcurrentBuilds()
+        timeout(time: 30 , unit: 'MINUTES')
+        ansiColor('xterm')
+    }
+    parameters {
+        choice(name: 'ACTION' , choices: ['apply','destroy'], description: 'pick something')
+    }
+
+    stages {
+        stage('INIT') {
+            steps {
+                script {
+                    withAWS(region: 'us-easst-1', credentials: 'aws-cred') {
+                        sh """
+                            cd 20-bastion
+                            terraform init -reconfigure
+                            terraform plan
+                        """
+                    }
+                }
+            }
+        }
+
+        stage('APPLY') {
+            steps {
+                script {
+                    withAWS(region: 'us-easst-1', credentials: 'aws-cred') {
+                        sh """
+                            cd 20-bastion
+                            terraform apply -auto-approve
+                        """
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            echo " This is a joindevops Expense project build"
+            deleteDir()
+        }
+        failure {
+            echo " This pipeline is failed for some reason"
+        }
+        success {
+            echo "This pipeline is success"
+        }
+    }
+}
