@@ -29,10 +29,10 @@ pipeline {
         }
 
         stage('APPLY') {
-            input {
-                message "should we continue ?"
-                ok "yes, please go ahead"
-            }
+            // input {
+            //     message "should we continue ?"
+            //     ok "yes, please go ahead"
+            // }
             steps {
                 script {
                     withAWS(region: 'us-east-1', credentials: 'aws-cred') {
@@ -54,19 +54,27 @@ pipeline {
             }
             parallel {
                 stage ('20-bastion') {
-                    build job: '20-bastion', parameters: [string(name: 'ACTION', value: 'apply')], wait: false
+                    steps {
+                        build job: '20-bastion', parameters: [string(name: 'ACTION', value: 'apply')], wait: false
+                    }
                 }
 
                 stage(30-rds) {
-                    build job: '30-rds', parameters: [string(name: 'ACTION', value: 'apply')], wait: false
+                    steps {
+                        build job: '30-rds', parameters: [string(name: 'ACTION', value: 'apply')], wait: false
+                    }
                 }
 
                 stage(40-eks){
-                    build job: '40-eks', parameters:[string(name: 'ACTION', value:'apply')], wait: false
+                    steps {
+                        build job: '40-eks', parameters: [string(name: 'ACTION', value: 'apply')], wait: false
+                    }
                 }
 
                 stage(50-ecr){
-                    build job: '50-ecr', parameters:[string(name: 'ACTION', value:'apply')], wait: false
+                    steps {
+                        build job: '50-ecr', parameters: [string(name: 'ACTION', value: 'apply')], wait: false
+                    }
                 }
             }
         }
