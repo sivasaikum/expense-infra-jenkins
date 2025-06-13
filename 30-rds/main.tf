@@ -29,6 +29,7 @@ module "db" {
 
   # Database Deletion Protection
   deletion_protection = false
+  skip_final_snapshot = true
 
   parameters = [
     {
@@ -77,4 +78,5 @@ resource "aws_route53_record" "www_dev" {
   type    = "CNAME"
   ttl     = 5
   records        = [module.db.db_instance_address]
+  allow_overwrite = true
 }
