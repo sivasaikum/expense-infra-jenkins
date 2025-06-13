@@ -8,7 +8,7 @@ terraform {
 
     backend "s3" {
       bucket = "sai-tf-state-remote2"
-      key = "jenkins2-terraform-expense-cluster" # you should have unique keys within the bucket, same keys should not be used in others repo or tf floders
+      key = "jenkins-terraform-expense-cluster" # you should have unique keys within the bucket, same keys should not be used in others repo or tf floders
       region = "us-east-1"
       dynamodb_table = "sai-tf-state-locking"
     }
