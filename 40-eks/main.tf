@@ -8,7 +8,7 @@ module "eks" {
   version = "~> 20.0"
 
   cluster_name    = "${var.project}-${var.environment}"
-  cluster_version = "1.31"
+  cluster_version = "1.32"
   create_node_security_group = false
   create_cluster_security_group = false
   cluster_security_group_id = local.eks_control_plane_sg_id
