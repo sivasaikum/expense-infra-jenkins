@@ -64,9 +64,9 @@ module "eks" {
       instance_types = ["m5.xlarge"]
       key_name = aws_key_pair.eks.key_name
 
-      min_size     = 1
+      min_size     = 2
       max_size     = 10
-      desired_size = 1
+      desired_size = 2
       iam_role_additional_policies = {
         AmazonEBSCSIDriverPolicy = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
         AmazonEFSCSIDriverPolicy = "arn:aws:iam::aws:policy/service-role/AmazonEFSCSIDriverPolicy"
